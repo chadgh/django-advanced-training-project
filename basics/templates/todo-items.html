@@ -33,7 +33,8 @@
                     url: url,
                     method: 'POST'
                 }).done(function() {
-                    $("span#todo-" + todo_id).addClass("done");
+                    // $("span#todo-" + todo_id).addClass("done");
+					window.location.reload();
                 });
             }
             else {
@@ -42,7 +43,8 @@
                     url: url,
                     method: 'POST'
                 }).done(function() {
-                    $("span#todo-" + todo_id).removeClass("done");
+                    // $("span#todo-" + todo_id).removeClass("done");
+					window.location.reload();
                 });
             }
         });
