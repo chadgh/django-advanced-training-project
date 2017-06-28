@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}All Todo Items{% endblock %}
+
+{% block css %}
+<style type="text/css">
+    * { font-size: 18pt; }
+    .done { text-decoration: line-through; }
+    ul { list-style: none; }
+</style>
+{% endblock %}
+
+{% block javascript %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        var csrftoken = $("[name=csrfmiddlewaretoken]").val();
+
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                if (!/^(GET|HEAD|OPTIONS|TRACE)$/.test(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+
+        $("input[type='checkbox']").change(function() {
+            todo_id = $(this).val();
+
+            if(this.checked) {
+                url = "{% url 'todos:done' 0000 %}".replace(0000, todo_id);
+                $.ajax({
+                    url: url,
+                    method: 'POST'
+                }).done(function() {
+                    $("span#todo-" + todo_id).addClass("done");
+                });
+            }
+            else {
+                url = "{% url 'todos:undone' 0000 %}".replace(0000, todo_id);
+                $.ajax({
+                    url: url,
+                    method: 'POST'
+                }).done(function() {
+                    $("span#todo-" + todo_id).removeClass("done");
+                });
+            }
+        });
+    });
+</script>
+{% endblock %}
+
+{% block content %}
+{% csrf_token %}
+<div id='todo-items'>
+    <header><h2>All TODO Items:</h2></header>
+    <ul>
+    {% for item in todos %}
+        <li>
+            <input type="checkbox" {% if item.done %}checked{% endif %} name="todo" value="{{ item.id }}">
+            <span id="todo-{{ item.id }}"{% if item.done %} class="done"{% endif %}>{{ item.text }}</span>
+        </li>
+    {% endfor %}
+    </ul>
+</div>
+{% endblock %}
