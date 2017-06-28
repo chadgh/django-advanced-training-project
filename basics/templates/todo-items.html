@@ -7,6 +7,7 @@
     * { font-size: 18pt; }
     .done { text-decoration: line-through; }
     ul { list-style: none; }
+    .success { color: green; }
 </style>
 {% endblock %}
 
@@ -65,4 +66,13 @@
     {% endfor %}
     </ul>
 </div>
+{% if messages %}
+<div id="messages">
+    <ul>
+    {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+    </ul>
+</div>
+{% endif %}
 {% endblock %}
